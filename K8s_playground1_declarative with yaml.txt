@@ -74,7 +74,10 @@ PS C:\Users\naz\docker_playground\k8s> minikube service k8s-web-hello
   
 
 PS C:\Users\naz\docker_playground\k8s>
-## 2. k8s-web-hello-multiple-deployment
+
+PS C:\Users\namu\docker_playground\k8s> kubectl delete -f deployment.yaml -f service.yaml
+deployment.apps "k8s-web-hello" deleted
+service "k8s-web-hello" deleted
 
 
 

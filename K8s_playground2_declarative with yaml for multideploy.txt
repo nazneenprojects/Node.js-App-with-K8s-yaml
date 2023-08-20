@@ -1,6 +1,5 @@
 PS C:\Users\naz\docker_playground\k8s\k8s-web-hello-multiple-deployment> ls
 
-
     Directory: C:\Users\naz\docker_playground\k8s\k8s-web-hello-multiple-deployment
 
 

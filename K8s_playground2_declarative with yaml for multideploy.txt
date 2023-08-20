@@ -1,0 +1,85 @@
+PS C:\Users\naz\docker_playground\k8s\k8s-web-hello-multiple-deployment> ls
+
+
+    Directory: C:\Users\naz\docker_playground\k8s\k8s-web-hello-multiple-deployment
+
+
+----                 -------------         ------ ----                                                                                                                                                          
+d-----         8/19/2023   7:38 AM                k8s-web-hello                                                                                                                                                 
+d-----         8/19/2023   8:07 AM                k8s-web-to-nginx                                                                                                                                              
+-a----         8/19/2023   7:00 AM            468 deployment.yaml                                                                                                                                               
+-a----         8/19/2023   7:53 AM          90881 multiple deployment for web app 2 layer architect.png
+-a----         8/19/2023   8:40 AM            530 nginx.yaml
+-a----         8/19/2023   7:06 AM            179 service.yaml
+
+PS C:\Users\naz\docker_playground\k8s\k8s-web-hello-multiple-deployment> kubectl apply -f k8s-web-to-nginx.yaml -f nginx.yaml
+service/k8s-web-to-nginx created
+deployment.apps/k8s-web-to-nginx created
+deployment.apps/nginx created
+PS C:\Users\naz\docker_playground\k8s\k8s-web-hello-multiple-deployment> kubectl get deploy
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+k8s-web-to-nginx   3/3     3            3           14s
+nginx              0/5     5            0           14s
+PS C:\Users\naz\docker_playground\k8s\k8s-web-hello-multiple-deployment> kubectl get svc   
+NAME               TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+k8s-web-to-nginx   LoadBalancer   10.96.177.18    <pending>     3333:31338/TCP   24s
+kubernetes         ClusterIP      10.96.0.1       <none>        443/TCP          7m38s
+PS C:\Users\naz\docker_playground\k8s\k8s-web-hello-multiple-deployment> kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+k8s-web-to-nginx-79859ddb7c-9sb9x   1/1     Running   0          64s
+k8s-web-to-nginx-79859ddb7c-z754v   1/1     Running   0          64s
+nginx-776b678b86-6fm2m              1/1     Running   0          64s
+nginx-776b678b86-bfkjm              0/1     Pending   0          64s
+nginx-776b678b86-gb2s2              1/1     Running   0          64s
+nginx-776b678b86-t72sz              1/1     Running   0          64s
+nginx-776b678b86-zpv6b              1/1     Running   0          64s
+PS C:\Users\naz\.kube> minikube service k8s-web-to-nginx
+|-----------|------------------|-------------|----------------------------|
+| NAMESPACE |       NAME       | TARGET PORT |            URL             |
+|-----------|------------------|-------------|----------------------------|
+| default   | k8s-web-to-nginx |        3333 | http://172.30.87.184:31338 |
+|-----------|------------------|-------------|----------------------------|
+* Opening service default/k8s-web-to-nginx in default browser...
+
+PS C:\Users\naz\.kube> kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+k8s-web-to-nginx-79859ddb7c-9sb9x   1/1     Running   0          10m
+k8s-web-to-nginx-79859ddb7c-r92t9   1/1     Running   0          10m
+k8s-web-to-nginx-79859ddb7c-z754v   1/1     Running   0          10m
+nginx-776b678b86-6fm2m              1/1     Running   0          10m
+nginx-776b678b86-bfkjm              0/1     Pending   0          10m
+nginx-776b678b86-gb2s2              1/1     Running   0          10m
+nginx-776b678b86-t72sz              1/1     Running   0          10m
+nginx-776b678b86-zpv6b              1/1     Running   0          10m
+PS C:\Users\naz\.kube> kubectl exec k8s-web-to-nginx-79859ddb7c-9sb9x -- nslookup nginx
+Server:         10.96.0.10
+Address:        10.96.0.10:53
+
+Name:   nginx.default.svc.cluster.local
+Address: 10.109.48.254
+
+** server can't find nginx.cluster.local: NXDOMAIN
+
+** server can't find nginx.cluster.local: NXDOMAIN
+
+** server can't find nginx.svc.cluster.local: NXDOMAIN
+
+
+** server can't find nginx.svc.cluster.local: NXDOMAIN
+
+command terminated with exit code 1
+PS C:\Users\naz\.kube> kubectl get svc
+NAME               TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+k8s-web-to-nginx   LoadBalancer   10.96.177.18    <pending>     3333:31338/TCP   12m
+kubernetes         ClusterIP      10.96.0.1       <none>        443/TCP          19m
+nginx              ClusterIP      10.109.48.254   <none>        80/TCP           12m
+PS C:\Users\naz\.kube> kubectl exec k8s-web-to-nginx-79859ddb7c-9sb9x -- wget -q0- http://nginx
+
+PS C:\Users\naz\docker_playground\k8s\k8s-web-hello-multiple-deployment> kubectl delete -f k8s-web-to-nginx.yaml -f nginx.yaml
+service "k8s-web-to-nginx" deleted
+deployment.apps "k8s-web-to-nginx" deleted
+service "nginx" deleted
+deployment.apps "nginx" deleted
+
+
+
